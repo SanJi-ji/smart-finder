@@ -462,10 +462,13 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    
+    /* 🛠️ Add this line to fix the stretching: */
+    width: fit-content; 
 }
 
 .profile-role-badge.admin-badge {
-    background: #219ba8; /* A sharp admin purple, or change to any color you like! */
+    background: #219ba8; /* Clean teal shade matching your theme */
 }
 .profile-details {
     display: flex;
