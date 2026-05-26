@@ -149,7 +149,12 @@ function Profile() {
                     <div className="profile-view">
                         <div className="profile-avatar">
                             <span className="avatar-icon">👤</span>
-                            <span className="profile-role-badge">{profile?.role}</span>
+                            <div className="profile-avatar">
+    <span className="avatar-icon">👤</span>
+    <span className={`profile-role-badge ${profile?.is_staff ? 'admin-badge' : ''}`}>
+        {profile?.is_staff ? 'ADMIN' : (profile?.role || 'STUDENT')}
+    </span>
+</div>  
                         </div>
                         <div className="profile-details">
                             <div className="profile-field">
@@ -263,3 +268,5 @@ function Profile() {
 }
 
 export default Profile;
+
+

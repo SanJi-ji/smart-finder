@@ -453,7 +453,6 @@
     background: rgba(14, 165, 164, 0.1);
     border-radius: 50%;
 }
-
 .profile-role-badge {
     padding: 0.3rem 0.8rem;
     background: var(--primary-color);
@@ -465,6 +464,9 @@
     letter-spacing: 0.5px;
 }
 
+.profile-role-badge.admin-badge {
+    background: #219ba8; /* A sharp admin purple, or change to any color you like! */
+}
 .profile-details {
     display: flex;
     flex-direction: column;
