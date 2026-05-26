@@ -5,6 +5,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import DetailPanel from '../components/DetailPanel';
 import useConfirmModal from '../hooks/useConfirmModal';
 import useSearch from '../hooks/useSearch';
+import { useToast } from '../components/Toast';
 import { fetchItems, updateItemStatus, deleteItem } from '../services/api';
 import '../styles/App.css';
 import '../styles/Pages.css';
@@ -47,6 +48,7 @@ function Dashboard() {
         loadItems();
     }, []);
     const { confirm, openConfirm, closeConfirm, confirmProps } = useConfirmModal(CONFIRM_ACTIONS);
+    const { showToast } = useToast();
     
     // Only show Pending Review items in the main dashboard table
     const pendingItems = useMemo(() => items.filter(i => i.status === 'Pending Review'), [items]);
@@ -70,21 +72,25 @@ function Dashboard() {
                 setItems(prev => prev.map(item =>
                     item.id === id ? { ...item, status: 'Approved' } : item
                 ));
+                showToast('Post approved successfully!', 'success');
             } else if (action === 'reject') {
                 await updateItemStatus(id, 'Rejected');
                 setItems(prev => prev.map(item =>
                     item.id === id ? { ...item, status: 'Rejected' } : item
                 ));
+                showToast('Post has been rejected.', 'error');
             } else if (action === 'delete') {
                 await deleteItem(id);
                 setItems(prev => prev.filter(item => item.id !== id));
+                showToast('Post deleted permanently.', 'info');
             }
         } catch (err) {
             console.error('Update status failed', err);
+            showToast('Action failed. Please try again.', 'error');
         }
         closeConfirm();
         setSelectedItem(null); // Close panel after action
-    }, [confirm, closeConfirm]);
+    }, [confirm, closeConfirm, showToast]);
 
     const detailFields = [
         { label: 'Type', key: 'type', render: (val) => <StatusBadge status={val} /> },
