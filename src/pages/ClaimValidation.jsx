@@ -5,6 +5,7 @@ import DetailPanel from '../components/DetailPanel';
 import useConfirmModal from '../hooks/useConfirmModal';
 import useSearch from '../hooks/useSearch';
 import useFormHandler from '../hooks/useFormHandler';
+import { useToast } from '../components/Toast';
 import { fetchClaims, createClaim, updateClaimStatus, fetchItems } from '../services/api';
 import '../styles/Pages.css';
 
@@ -44,6 +45,7 @@ function ClaimValidation() {
     const { form, feedback, handleChange, resetForm, showFeedback } = useFormHandler(EMPTY_FORM);
     const { confirm, openConfirm, closeConfirm, confirmProps } = useConfirmModal(CONFIRM_ACTIONS);
     const { searchTerm, setSearchTerm, filtered } = useSearch(claims, SEARCH_FIELDS);
+    const { showToast } = useToast();
     const [selectedClaim, setSelectedClaim] = useState(null);
     const [itemSearch, setItemSearch] = useState('');
 
@@ -91,6 +93,7 @@ function ClaimValidation() {
                     contact_info: form.contact,
                 });
                 showFeedback('Claim logged successfully!');
+                showToast('Claim logged successfully!', 'success');
                 resetForm();
             } else {
                 let newStatus = '';
@@ -99,17 +102,23 @@ function ClaimValidation() {
                 else if (action === 'release') newStatus = 'Released';
                 
                 await updateClaimStatus(id, newStatus);
+                const messages = {
+                    Approved: ['Claim approved!', 'success'],
+                    Rejected: ['Claim rejected.', 'error'],
+                    Released: ['Item released to claimant! ✅', 'success'],
+                };
+                if (messages[newStatus]) showToast(...messages[newStatus]);
             }
             // Refresh data from server
             loadData();
         } catch (err) {
-            showFeedback('Action failed. Please try again.', 0);
+            showToast('Action failed. Please try again.', 'error');
             console.error(err);
         } finally {
             closeConfirm();
             setSelectedClaim(null);
         }
-    }, [confirm, closeConfirm, form, resetForm, showFeedback, loadData]);
+    }, [confirm, closeConfirm, form, resetForm, showFeedback, showToast, loadData]);
 
     const detailFields = [
         { label: 'Claimant Name', key: 'claimant_name', render: (val, c) => val || c.claimant_username || 'Admin' },
