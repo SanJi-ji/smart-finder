@@ -144,20 +144,17 @@ function Profile() {
 
             <section className="form-card profile-card">
                 {feedback && <div className={`form-feedback ${feedback.includes('success') ? 'success' : 'error'}`}>{feedback}</div>}
+        {!isEditing && !isChangingPassword ? (
+            <div className="profile-view">
+                <div className="profile-avatar">
+                    <span className="avatar-icon">👤</span>
+                </div>
+                <span className={`profile-role-badge ${profile?.is_staff ? 'admin-badge' : ''}`}>
+                    {profile?.is_staff ? 'ADMIN' : (profile?.role || 'STUDENT')}
+                </span>
 
-                {!isEditing && !isChangingPassword ? (
-                    <div className="profile-view">
-                        <div className="profile-avatar">
-                            <span className="avatar-icon">👤</span>
-                            <div className="profile-avatar">
-    <span className="avatar-icon">👤</span>
-    <span className={`profile-role-badge ${profile?.is_staff ? 'admin-badge' : ''}`}>
-        {profile?.is_staff ? 'ADMIN' : (profile?.role || 'STUDENT')}
-    </span>
-</div>  
-                        </div>
-                        <div className="profile-details">
-                            <div className="profile-field">
+            <div className="profile-details">
+                <div className="profile-field">
                                 <span className="field-label">Username</span>
                                 <span className="field-value">{profile?.username}</span>
                             </div>
@@ -177,9 +174,10 @@ function Profile() {
                         <div className="form-actions">
                             <button className="btn-primary" onClick={handleEdit}>Edit Profile</button>
                             <button className="btn-secondary" onClick={() => setIsChangingPassword(true)}>Change Password</button>
-                        </div>
-                    </div>
-                ) : isEditing ? (
+                            </div>
+                            </div>
+                            ) : isEditing ? (
+
                     <form onSubmit={handleSaveClick} className="page-form">
                         <h2>Edit Profile</h2>
                         <div className="form-row">
